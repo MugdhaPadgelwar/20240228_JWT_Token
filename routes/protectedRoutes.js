@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const User = require("../models/userModel");
 const verifyToken = require("../middleware/verfication");
+const bcrypt = require("bcrypt");
 
 router.put("/change-password", verifyToken, async (req, res) => {
   try {
@@ -17,7 +18,7 @@ router.put("/change-password", verifyToken, async (req, res) => {
 
     // Verify old password
     const passwordMatch = await bcrypt.compare(oldPassword, user.password);
-
+    console.log(passwordMatch);
     if (!passwordMatch) {
       return res.status(401).json({ error: "Incorrect old password" });
     }
