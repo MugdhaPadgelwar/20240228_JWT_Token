@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const port = 3000;
 const jwt = require("jsonwebtoken");
+const verifyToken = require("./middleware/verfication");
 mongoose.connect(
   "mongodb+srv://mugdhapadgelwar2002:Mugdha123@cluster0.2mjqkrn.mongodb.net/?retryWrites=true&w=majority"
 );
@@ -76,22 +77,6 @@ app.post("/login", async (req, res) => {
     res.status(500).json({ error: "Login failed" });
   }
 });
-const verifyToken = (req, res, next) => {
-  const token = req.headers.authorization;
-
-  if (!token) {
-    return res.status(401).json({ error: "Token is required" });
-  }
-
-  jwt.verify(token, "your-secret-key", (err, decoded) => {
-    if (err) {
-      return res.status(401).json({ error: "Invalid token" });
-    }
-
-    req.user = decoded.userId;
-    next();
-  });
-};
 
 app.put("/change-password", verifyToken, async (req, res) => {
   try {
